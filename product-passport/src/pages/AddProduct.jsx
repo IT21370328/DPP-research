@@ -78,8 +78,8 @@ const AddProductForm = () => {
             setForm({ ...form, caffeineContent: e.target.value })
           }
         />
-        <button type="submit">Add Product</button>
       </form>
+      <button type="submit">Add Product</button>
     </div>
   );
 };

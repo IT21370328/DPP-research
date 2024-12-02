@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; 
-import "./Admin.css"
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "./Admin.css";
 
 const AdminDashboard = () => {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
-  const navigate = useNavigate(); // Initialize navigate function
+  const navigate = useNavigate();
 
   // Fetch all records
   useEffect(() => {
@@ -26,6 +29,11 @@ const AdminDashboard = () => {
     setSearch(e.target.value);
   };
 
+  // Filter products based on batchId (searching by batchId)
+  const filteredProducts = products.filter((product) =>
+    product.batchId.toLowerCase().includes(search.toLowerCase())
+  );
+
   const handleProductClick = (batchId) => {
     navigate(`/product/${batchId}`); // Navigate to the Product Details page
   };
@@ -40,7 +48,7 @@ const AdminDashboard = () => {
   };
 
   const handleAddProduct = () => {
-    navigate("/add-product"); // Navigate to the Add Product page
+    navigate("/add-product");
   };
 
   return (
@@ -60,7 +68,7 @@ const AdminDashboard = () => {
         <div className="sidebar-search">
           <input
             type="text"
-            placeholder="Search products..."
+            placeholder="Search by Batch ID..."
             value={search}
             onChange={handleSearchChange}
           />
@@ -71,42 +79,39 @@ const AdminDashboard = () => {
         <h2>All Products</h2>
 
         <div className="product-grid">
-          {products
-            .filter((product) =>
-              product.flavor.toLowerCase().includes(search.toLowerCase())
-            )
-            .map((product) => (
-              <div
-                key={product.batchId}
-                className="product-tile"
-                onClick={() => handleProductClick(product.batchId)} // Navigate to Product Details page
-              >
-                <img
-                  src="https://via.placeholder.com/150" // Dummy QR code image
-                  alt="QR code"
-                  className="qr-code"
-                />
-                <div className="product-info">
-                  <h3>{product.batchId}</h3>
-                  <p>{product.flavor}</p>
-                  <p>{product.supplierName}</p>
-                  <div className="product-actions">
-                    <button onClick={() => console.log("Update product")} className="update-btn">
-                      Update
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent product click handler
-                        handleDelete(product.batchId);
-                      }}
-                      className="delete-btn"
-                    >
-                      Delete
-                    </button>
-                  </div>
+          {filteredProducts.map((product) => (
+            <div
+              key={product.batchId}
+              className="product-tile"
+              onClick={() => handleProductClick(product.batchId)} // Navigate to Product Details page
+            >
+              <img
+                src="https://via.placeholder.com/150" // Dummy QR code image
+                alt="QR code"
+                className="qr-code"
+              />
+              <div className="product-info">
+                <h3>{product.batchId}</h3>
+                <p>{product.flavor}</p>
+                <p>{product.supplierName}</p>
+                <div className="product-actions">
+                  <button onClick={() => console.log("Update product")} className="update-btn">
+                    <FontAwesomeIcon icon={faEdit} style={{ marginRight: "5px" }} />
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent product click handler
+                      handleDelete(product.batchId);
+                    }}
+                    className="delete-btn"
+                  >
+                    <FontAwesomeIcon icon={faTrash} style={{ marginRight: "5px" }} />
+                  </button>
                 </div>
               </div>
-            ))}
+            </div>
+          ))}
         </div>
       </div>
     </div>

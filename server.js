@@ -1,6 +1,7 @@
 // Importing required dependencies
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 require('dotenv').config(); // For environment variables from .env
 
 const adminRoutes = require('./routes/admin');
@@ -10,6 +11,7 @@ const app = express();
 
 // Middleware to parse JSON bodies
 app.use(express.json());
+app.use(cors());
 
 
 mongoose

@@ -7,7 +7,7 @@ const TeaQualitySchema = new mongoose.Schema({
     location: { type: String, required: true },
     moistureContent: { type: Number, required: true },
     caffeineContent: { type: Number, required: true },
-    chemicalComposition: { type: Object, required: true },
+    chemicalComposition: { type: Object, required: false },
     timestamp: { type: Date, default: Date.now },
 });
 

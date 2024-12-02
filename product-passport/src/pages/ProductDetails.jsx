@@ -67,105 +67,49 @@ const ProductDetails = () => {
   return (
     <div className="product-details-page">
       <h1>Product Details</h1>
-      <div className="product-tiles">
-        {/* Batch ID Tile */}
-        <div className="product-tile">
-          <img
-            src="https://via.placeholder.com/60?text=ID" // Placeholder for Batch ID image
-            alt="Batch ID"
-          />
-          <h4>Batch ID</h4>
-          <p>{product.batchId}</p>
-        </div>
+      
+      <div className="product-details">
+      <center>
+        <p><strong>Batch ID:</strong> {product.batchId}</p>
+        <p><strong>Flavor:</strong> {product.flavor}</p>
+        <p><strong>Supplier Name:</strong> {product.supplierName}</p>
+        <p><strong>Location:</strong> {product.location}</p>
+        <p><strong>Moisture Content:</strong> {product.moistureContent}%</p>
+        <p><strong>Caffeine Content:</strong> {product.caffeineContent}%</p>
+        </center>
 
-        {/* Flavor Tile */}
-        <div className="product-tile">
-          <img
-            src="https://via.placeholder.com/60?text=Flavor" // Placeholder for Flavor image
-            alt="Flavor"
-          />
-          <h4>Flavor</h4>
-          <p>{product.flavor}</p>
-        </div>
+        {/* Display Daily Data */}
+        <h3>Daily Updates</h3>
+        <ul>
+          {dailyUpdates.map((data, index) => (
+            <li key={index}>
+              <p><strong>Date:</strong> {new Date(data.date).toLocaleDateString()}</p>
+              <p><strong>Moisture Content:</strong> {data.moistureContent}%</p>
+              <p><strong>Caffeine Content:</strong> {data.caffeineContent}%</p>
+            </li>
+          ))}
+        </ul>
 
-        {/* Supplier Name Tile */}
-        <div className="product-tile">
-          <img
-            src="https://via.placeholder.com/60?text=Supplier" // Placeholder for Supplier image
-            alt="Supplier Name"
+        {/* Form to Add Daily Data */}
+        <h3>Add Daily Data</h3>
+        <form onSubmit={handleAddDailyData}>
+          <input
+            type="number"
+            name="moistureContent"
+            value={dailyData.moistureContent}
+            onChange={handleDailyDataChange}
+            placeholder="Moisture Content (%)"
           />
-          <h4>Supplier</h4>
-          <p>{product.supplierName}</p>
-        </div>
-
-        {/* Location Tile */}
-        <div className="product-tile">
-          <img
-            src="https://via.placeholder.com/60?text=Location" // Placeholder for Location image
-            alt="Location"
+          <input
+            type="number"
+            name="caffeineContent"
+            value={dailyData.caffeineContent}
+            onChange={handleDailyDataChange}
+            placeholder="Caffeine Content (%)"
           />
-          <h4>Location</h4>
-          <p>{product.location}</p>
-        </div>
-
-        {/* Moisture Content Tile */}
-        <div className="product-tile">
-          <img
-            src="https://via.placeholder.com/60?text=Moisture" // Placeholder for Moisture image
-            alt="Moisture Content"
-          />
-          <h4>Moisture</h4>
-          <p>{product.moistureContent}%</p>
-        </div>
-
-        {/* Caffeine Content Tile */}
-        <div className="product-tile">
-          <img
-            src="https://via.placeholder.com/60?text=Caffeine" // Placeholder for Caffeine image
-            alt="Caffeine Content"
-          />
-          <h4>Caffeine</h4>
-          <p>{product.caffeineContent}%</p>
-        </div>
+          <button type="submit">Add Daily Data</button>
+        </form>
       </div>
-
-      {/* Display Daily Updates */}
-      <h3>Daily Updates</h3>
-      <ul>
-        {dailyUpdates.map((data, index) => (
-          <li key={index}>
-            <p>
-              <strong>Date:</strong> {new Date(data.date).toLocaleDateString()}
-            </p>
-            <p>
-              <strong>Moisture Content:</strong> {data.moistureContent}%
-            </p>
-            <p>
-              <strong>Caffeine Content:</strong> {data.caffeineContent}%
-            </p>
-          </li>
-        ))}
-      </ul>
-
-      {/* Form to Add Daily Data */}
-      <h3>Add Daily Data</h3>
-      <form onSubmit={handleAddDailyData}>
-        <input
-          type="number"
-          name="moistureContent"
-          value={dailyData.moistureContent}
-          onChange={handleDailyDataChange}
-          placeholder="Moisture Content (%)"
-        />
-        <input
-          type="number"
-          name="caffeineContent"
-          value={dailyData.caffeineContent}
-          onChange={handleDailyDataChange}
-          placeholder="Caffeine Content (%)"
-        />
-        <button type="submit">Add Daily Data</button>
-      </form>
     </div>
   );
 };

@@ -9,7 +9,7 @@ import "./Admin.css";
 const AdminDashboard = () => {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
 
   // Fetch all records
   useEffect(() => {
@@ -29,11 +29,6 @@ const AdminDashboard = () => {
     setSearch(e.target.value);
   };
 
-  // Filter products based on batchId (searching by batchId)
-  const filteredProducts = products.filter((product) =>
-    product.batchId.toLowerCase().includes(search.toLowerCase())
-  );
-
   const handleProductClick = (batchId) => {
     navigate(`/product/${batchId}`); // Navigate to the Product Details page
   };
@@ -48,38 +43,30 @@ const AdminDashboard = () => {
   };
 
   const handleAddProduct = () => {
-    navigate("/add-product");
+    navigate("/add-product"); // Navigate to the Add Product page
   };
 
   return (
-    <div className="admin-dashboard">
-      <div className="sidebar">
-        <div className="sidebar-title">
-          <h1>Product Passport</h1>
-        </div>
-        <ul className="sidebar-links">
-          <li>
-            <button onClick={handleAddProduct}>Add Product</button>
-          </li>
-          <li>
-            <a href="/check-quality">Check Quality of Product</a>
-          </li>
-        </ul>
-        <div className="sidebar-search">
-          <input
-            type="text"
-            placeholder="Search by Batch ID..."
-            value={search}
-            onChange={handleSearchChange}
-          />
-        </div>
+    <div className="main-content">
+      <h2>All Products</h2>
+
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={search}
+          onChange={handleSearchChange}
+        />
       </div>
+      <br></br>
+      <br></br>
 
-      <div className="main-content">
-        <h2>All Products</h2>
-
-        <div className="product-grid">
-          {filteredProducts.map((product) => (
+      <div className="product-grid">
+        {products
+          .filter((product) =>
+            product.flavor.toLowerCase().includes(search.toLowerCase())
+          )
+          .map((product) => (
             <div
               key={product.batchId}
               className="product-tile"
@@ -98,7 +85,7 @@ const AdminDashboard = () => {
                   <button onClick={() => console.log("Update product")} className="update-btn">
                     <FontAwesomeIcon icon={faEdit} style={{ marginRight: "5px" }} />
                   </button>
-
+                  
                   <button
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent product click handler
@@ -112,8 +99,8 @@ const AdminDashboard = () => {
               </div>
             </div>
           ))}
-        </div>
       </div>
+
     </div>
   );
 };

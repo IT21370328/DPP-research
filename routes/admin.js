@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const TeaQuality = require('../models/TeaQuality');
-const QRCode = require('qrcode'); // Import QRCode library
 
-// Middleware for admin authentication (Optional)
+// Middleware for admin authentication
 // You can uncomment this section to use authentication.
-const adminAuth = (req, res, next) => {
+/*const adminAuth = (req, res, next) => {
   const { username, password } = req.headers;
   if (username === 'admin' && password === 'password123') {
     next(); // User is authorized, continue to the next middleware
@@ -14,29 +13,14 @@ const adminAuth = (req, res, next) => {
   }
 };
 
-// Uncomment this line if you want to use admin authentication middleware globally
-// router.use(adminAuth);
+router.use(adminAuth);*/
 
-// CREATE: Add new tea quality data and generate QR code
+// CREATE: Add new tea quality data
 router.post('/add', async (req, res) => {
   try {
-    const { batchId, flavor, supplierName, location, moistureContent, caffeineContent } = req.body;
-
-    // Generate QR code URL for the batchId
-    const qrCodeData = await QRCode.toDataURL(batchId);  // Generate QR code image as data URL
-
-    const newTeaQuality = new TeaQuality({
-      batchId,
-      flavor,
-      supplierName,
-      location,
-      moistureContent,
-      caffeineContent,
-      qrCode: qrCodeData,  // Store the QR code in the database
-    });
-
+    const newTeaQuality = new TeaQuality(req.body);
     const savedData = await newTeaQuality.save();
-    res.status(201).json(savedData); // Return the saved product with QR code URL
+    res.status(201).json(savedData); // Return the saved data
   } catch (error) {
     res.status(400).json({ error: error.message }); // Error handling for invalid data
   }
@@ -100,10 +84,6 @@ router.post("/add-daily/:batchId", async (req, res) => {
   const { batchId } = req.params;
   const { moistureContent, caffeineContent } = req.body;
 
-  if (!moistureContent || !caffeineContent) {
-    return res.status(400).json({ message: "Both moistureContent and caffeineContent are required." });
-  }
-
   try {
     const product = await TeaQuality.findOne({ batchId });
 
@@ -139,5 +119,7 @@ router.get("/daily/:batchId", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+
 
 module.exports = router;

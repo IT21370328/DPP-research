@@ -124,6 +124,8 @@ h2 {
   display: flex;
   justify-content: space-between;
   width: 100%;
+  gap: 10px;
+  
 }
 
 .update-btn,
@@ -184,3 +186,45 @@ h2 {
   }
 }
 
+/* Product Action Buttons */
+.product-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.update-btn,
+.delete-btn {
+  padding: 10px 20px; /* Add padding to buttons */
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center; /* Align icons properly */
+}
+
+.update-btn {
+  background-color: #f39c12;
+  color: white;
+}
+
+.update-btn:hover {
+  background-color: #e67e22;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
+}
+
+/* Font Awesome Icon Styling */
+.update-btn .faEdit,
+.delete-btn .faTrash {
+  margin-right: 8px; /* Add spacing between icon and text */
+}

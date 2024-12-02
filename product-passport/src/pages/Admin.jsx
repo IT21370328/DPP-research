@@ -35,12 +35,14 @@ const AdminDashboard = () => {
 
   const handleDelete = async (batchId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/admin/delete/${batchId}`);
+      // Use the correct route `/api/admin/:batchId` without `/delete`
+      await axios.delete(`http://localhost:5000/api/admin/${batchId}`);
       fetchProducts(); // Refresh the list after delete
     } catch (error) {
       console.error("Error deleting product:", error);
     }
   };
+  
 
   const handleAddProduct = () => {
     navigate("/add-product"); // Navigate to the Add Product page
@@ -72,8 +74,8 @@ const AdminDashboard = () => {
               className="product-tile"
               onClick={() => handleProductClick(product.batchId)} // Navigate to Product Details page
             >
-              <img
-                src="https://via.placeholder.com/150" // Dummy QR code image
+               <img
+                src={product.qrCode} // Use the QR code URL from the product or fallback to placeholder
                 alt="QR code"
                 className="qr-code"
               />

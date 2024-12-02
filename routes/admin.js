@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const TeaQuality = require('../models/TeaQuality');
+const QRCode = require('qrcode'); // Import QR code generation library
 
 // Middleware for admin authentication
-// You can uncomment this section to use authentication.
+// Uncomment if needed.
 /*const adminAuth = (req, res, next) => {
   const { username, password } = req.headers;
   if (username === 'admin' && password === 'password123') {
@@ -15,10 +16,26 @@ const TeaQuality = require('../models/TeaQuality');
 
 router.use(adminAuth);*/
 
-// CREATE: Add new tea quality data
+// CREATE: Add new tea quality data with QR code generation
 router.post('/add', async (req, res) => {
   try {
-    const newTeaQuality = new TeaQuality(req.body);
+    const { batchId, flavor, supplierName, location, caffeineContent, moistureContent } = req.body;
+
+    // Generate QR Code
+    const qrData = `Batch ID: ${batchId}\nName: ${flavor}\nSupplier: ${supplierName}`;
+    const qrCode = await QRCode.toDataURL(qrData); // Generate Base64 QR code
+
+    // Create a new tea quality record
+    const newTeaQuality = new TeaQuality({
+      batchId,
+      flavor,
+      supplierName,
+      location,
+      caffeineContent,
+      moistureContent,
+      qrCode, // Save the QR code in the database
+    });
+
     const savedData = await newTeaQuality.save();
     res.status(201).json(savedData); // Return the saved data
   } catch (error) {
@@ -69,7 +86,8 @@ router.put('/:batchId', async (req, res) => {
 // DELETE: Delete tea quality data by batchId
 router.delete('/:batchId', async (req, res) => {
   try {
-    const deletedProduct = await TeaQuality.findOneAndDelete({ batchId: req.params.batchId }); // Delete by batchId
+    // Find and delete the product by batchId
+    const deletedProduct = await TeaQuality.findOneAndDelete({ batchId: req.params.batchId });
     if (!deletedProduct) {
       return res.status(404).json({ message: 'Product not found' }); // If product not found
     }
@@ -79,8 +97,9 @@ router.delete('/:batchId', async (req, res) => {
   }
 });
 
+
 // Endpoint to add daily data for a product (by batchId)
-router.post("/add-daily/:batchId", async (req, res) => {
+router.post('/add-daily/:batchId', async (req, res) => {
   const { batchId } = req.params;
   const { moistureContent, caffeineContent } = req.body;
 
@@ -88,7 +107,7 @@ router.post("/add-daily/:batchId", async (req, res) => {
     const product = await TeaQuality.findOne({ batchId });
 
     if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+      return res.status(404).json({ message: 'Product not found' });
     }
 
     const dailyData = { moistureContent, caffeineContent };
@@ -104,14 +123,14 @@ router.post("/add-daily/:batchId", async (req, res) => {
 });
 
 // Endpoint to fetch daily data for a product (by batchId)
-router.get("/daily/:batchId", async (req, res) => {
+router.get('/daily/:batchId', async (req, res) => {
   const { batchId } = req.params;
 
   try {
     const product = await TeaQuality.findOne({ batchId });
 
     if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+      return res.status(404).json({ message: 'Product not found' });
     }
 
     res.status(200).json(product.dailyData);
@@ -119,7 +138,5 @@ router.get("/daily/:batchId", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-
 
 module.exports = router;

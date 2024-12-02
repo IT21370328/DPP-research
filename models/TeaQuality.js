@@ -14,8 +14,10 @@ const TeaQualitySchema = new mongoose.Schema({
   moistureContent: { type: Number, required: true },
   caffeineContent: { type: Number, required: true },
   chemicalComposition: { type: Object, required: false },
+  qrCode: { type: String, required: false },
   timestamp: { type: Date, default: Date.now },
-  dailyData: [DailyDataSchema],  // Array to store daily updates
+  
+  dailyData: [DailyDataSchema],  
 });
 
 module.exports = mongoose.model("TeaQuality", TeaQualitySchema);

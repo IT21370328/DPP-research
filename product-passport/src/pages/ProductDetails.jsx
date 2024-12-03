@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useParams } from "react-router-dom"; // For getting batchId from URL
 import "./ProductDetails.css"
 
 const ProductDetails = () => {
@@ -11,6 +11,14 @@ const ProductDetails = () => {
     caffeineContent: "",
   });
   const [dailyUpdates, setDailyUpdates] = useState([]);
+  const [editMode, setEditMode] = useState(false); // To manage edit state for product details
+  const [productDetails, setProductDetails] = useState({
+    flavor: "",
+    supplierName: "",
+    location: "",
+    moistureContent: "",
+    caffeineContent: "",
+  });
 
   // Fetch product details and daily data
   useEffect(() => {
@@ -20,6 +28,13 @@ const ProductDetails = () => {
           `http://localhost:5000/api/admin/${batchId}`
         );
         setProduct(productResponse.data);
+        setProductDetails({
+          flavor: productResponse.data.flavor,
+          supplierName: productResponse.data.supplierName,
+          location: productResponse.data.location,
+          moistureContent: productResponse.data.moistureContent,
+          caffeineContent: productResponse.data.caffeineContent,
+        });
 
         const dailyResponse = await axios.get(
           `http://localhost:5000/api/admin/daily/${batchId}`
@@ -62,24 +77,93 @@ const ProductDetails = () => {
     }
   };
 
+  // Handle change for product detail fields
+  const handleProductDetailChange = (e) => {
+    const { name, value } = e.target;
+    setProductDetails({ ...productDetails, [name]: value });
+  };
+
+  // Handle update product details
+  const handleUpdateProductDetails = async (e) => {
+    e.preventDefault();
+    try {
+      const updatedProduct = await axios.put(
+        `http://localhost:5000/api/admin/${batchId}`,
+        productDetails
+      );
+      setProduct(updatedProduct.data); // Update the product details state with the response
+      setEditMode(false); // Exit edit mode
+      alert("Product details updated successfully!");
+    } catch (error) {
+      console.error("Error updating product details:", error);
+    }
+  };
+
   if (!product) return <div>Loading...</div>;
 
   return (
     <div className="product-details-page">
       <h1>Product Details</h1>
-      
+
       <div className="product-details">
-      <center>
-        <p><strong>Batch ID:</strong> {product.batchId}</p>
-        <p><strong>Flavor:</strong> {product.flavor}</p>
-        <p><strong>Supplier Name:</strong> {product.supplierName}</p>
-        <p><strong>Location:</strong> {product.location}</p>
-        <p><strong>Moisture Content:</strong> {product.moistureContent}%</p>
-        <p><strong>Caffeine Content:</strong> {product.caffeineContent}%</p>
+        {/* Display product info, show form when in edit mode */}
+        <center>
+          {!editMode ? (
+            <>
+              <p><strong>Batch ID:</strong> {product.batchId}</p>
+              <p><strong>Flavor:</strong> {product.flavor}</p>
+              <p><strong>Supplier Name:</strong> {product.supplierName}</p>
+              <p><strong>Location:</strong> {product.location}</p>
+              <p><strong>Moisture Content:</strong> {product.moistureContent}%</p>
+              <p><strong>Caffeine Content:</strong> {product.caffeineContent}%</p>
+              <button onClick={() => setEditMode(true)}>Edit Product</button>
+            </>
+          ) : (
+            // Editable fields when in edit mode
+            <form onSubmit={handleUpdateProductDetails}>
+              <input
+                type="text"
+                name="flavor"
+                value={productDetails.flavor}
+                onChange={handleProductDetailChange}
+                placeholder="Flavor"
+              />
+              <input
+                type="text"
+                name="supplierName"
+                value={productDetails.supplierName}
+                onChange={handleProductDetailChange}
+                placeholder="Supplier Name"
+              />
+              <input
+                type="text"
+                name="location"
+                value={productDetails.location}
+                onChange={handleProductDetailChange}
+                placeholder="Location"
+              />
+              <input
+                type="number"
+                name="moistureContent"
+                value={productDetails.moistureContent}
+                onChange={handleProductDetailChange}
+                placeholder="Moisture Content (%)"
+              />
+              <input
+                type="number"
+                name="caffeineContent"
+                value={productDetails.caffeineContent}
+                onChange={handleProductDetailChange}
+                placeholder="Caffeine Content (%)"
+              />
+              <button type="submit">Save Changes</button>
+              <button type="button" onClick={() => setEditMode(false)}>Cancel</button>
+            </form>
+          )}
         </center>
 
-        {/* Display Daily Data */}
-        <h3>Daily Updates</h3>
+       
+        <center><h3>Daily Updates</h3></center>
         <ul>
           {dailyUpdates.map((data, index) => (
             <li key={index}>

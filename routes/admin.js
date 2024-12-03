@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const TeaQuality = require('../models/TeaQuality');
 const QRCode = require('qrcode'); // Import QR code generation library
+const { web3, contract } = require('../product-passport/src/utils/web3Setup'); // Ensure correct import path for web3Setup
+
 
 // Middleware for admin authentication
 // Uncomment if needed.
@@ -16,16 +18,97 @@ const QRCode = require('qrcode'); // Import QR code generation library
 
 router.use(adminAuth);*/
 
-// CREATE: Add new tea quality data with QR code generation
+//Add new tea quality data with QR code generation and sending sensitive data to blockchain
 router.post('/add', async (req, res) => {
   try {
     const { batchId, flavor, supplierName, location, caffeineContent, moistureContent } = req.body;
 
-    // Generate QR Code
+    //Generate QR Code
     const qrData = `Batch ID: ${batchId}\nName: ${flavor}\nSupplier: ${supplierName}`;
     const qrCode = await QRCode.toDataURL(qrData); // Generate Base64 QR code
 
-    // Create a new tea quality record
+    //Save tea quality data to MongoDB
+    const newTeaQuality = new TeaQuality({
+      batchId,
+      flavor,
+      supplierName,
+      location,
+      caffeineContent,
+      moistureContent,
+      qrCode, // Save the QR code in the database
+    });
+
+    const savedData = await newTeaQuality.save();
+
+    //Send sensitive data to blockchain (only batchId and supplierName)
+    const sensitiveData = {
+      batchId: savedData.batchId,
+      supplierName: savedData.supplierName,
+    };
+
+    //Get the account to send the transaction from
+    const accounts = await web3.eth.getAccounts();
+
+    //Send the sensitive data to blockchain
+    const tx = contract.methods.addSensitiveData(
+      sensitiveData.batchId,
+      sensitiveData.supplierName
+    );
+    const gas = await tx.estimateGas({ from: accounts[0] });
+    const gasPrice = await web3.eth.getGasPrice();
+
+    const txData = {
+      from: accounts[0],
+      to: process.env.CONTRACT_ADDRESS,
+      data: tx.encodeABI(),
+      gas,
+      gasPrice,
+    };
+
+    const signedTx = await web3.eth.accounts.signTransaction(txData, process.env.PRIVATE_KEY);
+    const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+
+    // Step 4: Send response to client with both MongoDB and blockchain details
+    res.status(201).json({
+      message: 'Product added successfully!',
+      savedData,
+      blockchainReceipt: receipt, // Include blockchain transaction receipt for logging
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// In your admin.js or route handler file:
+router.get('/get-product/:batchId', async (req, res) => {
+  try {
+    const { batchId } = req.params;
+
+    // Retrieve product from the blockchain using getProduct
+    const product = await contract.methods.getProduct(batchId).call();
+
+    res.status(200).json({
+      batchId: product[0],
+      supplierName: product[1],
+      timestamp: product[2]
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+//Add new tea quality data with QR code generation
+router.post('/add', async (req, res) => {
+  try {
+    const { batchId, flavor, supplierName, location, caffeineContent, moistureContent } = req.body;
+
+    //Generate QR Code
+    const qrData = `Batch ID: ${batchId}\nName: ${flavor}\nSupplier: ${supplierName}`;
+    const qrCode = await QRCode.toDataURL(qrData); // Generate Base64 QR code
+
+    //Create a new tea quality record
     const newTeaQuality = new TeaQuality({
       batchId,
       flavor,

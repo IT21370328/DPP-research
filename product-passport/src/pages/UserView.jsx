@@ -14,12 +14,12 @@ const UserView = () => {
     const fetchProductDetails = async () => {
       try {
         const productResponse = await axios.get(
-          `http://localhost:5000/api/admin/${batchId}`
+          `http://192.168.1.3:5000/api/admin/${batchId}`
         );
         setProduct(productResponse.data);
 
         const dailyResponse = await axios.get(
-          `http://localhost:5000/api/admin/daily/${batchId}`
+          `http://192.168.1.3:5000/api/admin/daily/${batchId}`
         );
         setDailyUpdates(dailyResponse.data);
       } catch (error) {

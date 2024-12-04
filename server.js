@@ -13,6 +13,9 @@ app.use(express.json());
 app.use(cors());
 
 
+
+
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("Connected to MongoDB"))
@@ -27,9 +30,9 @@ app.get('/', (req, res) => {
 app.use('/api/admin', adminRoutes); // Admin routes
 app.use('/api/consumer', consumerRoutes); // Consumer routes
 
-
-// Start the server on the specified port
-const port = process.env.PORT || 5000;
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+// In your server.js (Express) or app.js (React, or similar framework)
+app.listen(5000, '0.0.0.0', () => {
+  console.log('Server running on http://0.0.0.0:5000');
 });
+
+

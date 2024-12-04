@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom"; // For getting batchId from URL
-import "./ProductDetails.css"
+import "./ProductDetails.css";
 
 const ProductDetails = () => {
   const { batchId } = useParams(); // Get batchId from URL
@@ -25,7 +25,7 @@ const ProductDetails = () => {
     const fetchProductDetails = async () => {
       try {
         const productResponse = await axios.get(
-          `http://localhost:5000/api/admin/${batchId}`
+          `http://192.168.1.3:5000/api/admin/${batchId}`
         );
         setProduct(productResponse.data);
         setProductDetails({
@@ -37,7 +37,7 @@ const ProductDetails = () => {
         });
 
         const dailyResponse = await axios.get(
-          `http://localhost:5000/api/admin/daily/${batchId}`
+          `http://192.168.1.3:5000/api/admin/daily/${batchId}`
         );
         setDailyUpdates(dailyResponse.data);
       } catch (error) {
@@ -56,10 +56,9 @@ const ProductDetails = () => {
   // Handle form submission for adding daily data
   const handleAddDailyData = async (e) => {
     e.preventDefault();
-
     try {
       await axios.post(
-        `http://localhost:5000/api/admin/add-daily/${batchId}`,
+        `http://192.168.1.3:5000/api/admin/add-daily/${batchId}`,
         dailyData
       );
       alert("Daily data added successfully!");
@@ -67,9 +66,10 @@ const ProductDetails = () => {
         moistureContent: "",
         caffeineContent: "",
       });
+
       // Re-fetch the daily data after adding a new entry
       const dailyResponse = await axios.get(
-        `http://localhost:5000/api/admin/daily/${batchId}`
+        `http://192.168.1.3:5000/api/admin/daily/${batchId}`
       );
       setDailyUpdates(dailyResponse.data);
     } catch (error) {
@@ -77,7 +77,7 @@ const ProductDetails = () => {
     }
   };
 
-  // Handle change for product detail fields
+  // Handle product details form input changes
   const handleProductDetailChange = (e) => {
     const { name, value } = e.target;
     setProductDetails({ ...productDetails, [name]: value });
@@ -88,7 +88,7 @@ const ProductDetails = () => {
     e.preventDefault();
     try {
       const updatedProduct = await axios.put(
-        `http://localhost:5000/api/admin/${batchId}`,
+        `http://192.168.1.3:5000/api/admin/${batchId}`,
         productDetails
       );
       setProduct(updatedProduct.data); // Update the product details state with the response
@@ -110,16 +110,27 @@ const ProductDetails = () => {
         <center>
           {!editMode ? (
             <>
-              <p><strong>Batch ID:</strong> {product.batchId}</p>
-              <p><strong>Flavor:</strong> {product.flavor}</p>
-              <p><strong>Supplier Name:</strong> {product.supplierName}</p>
-              <p><strong>Location:</strong> {product.location}</p>
-              <p><strong>Moisture Content:</strong> {product.moistureContent}%</p>
-              <p><strong>Caffeine Content:</strong> {product.caffeineContent}%</p>
+              <p>
+                <strong>Batch ID:</strong> {product.batchId}
+              </p>
+              <p>
+                <strong>Flavor:</strong> {product.flavor}
+              </p>
+              <p>
+                <strong>Supplier Name:</strong> {product.supplierName}
+              </p>
+              <p>
+                <strong>Location:</strong> {product.location}
+              </p>
+              <p>
+                <strong>Moisture Content:</strong> {product.moistureContent}%
+              </p>
+              <p>
+                <strong>Caffeine Content:</strong> {product.caffeineContent}%
+              </p>
               <button onClick={() => setEditMode(true)}>Edit Product</button>
             </>
           ) : (
-            // Editable fields when in edit mode
             <form onSubmit={handleUpdateProductDetails}>
               <input
                 type="text"
@@ -157,19 +168,29 @@ const ProductDetails = () => {
                 placeholder="Caffeine Content (%)"
               />
               <button type="submit">Save Changes</button>
-              <button type="button" onClick={() => setEditMode(false)}>Cancel</button>
+              <button type="button" onClick={() => setEditMode(false)}>
+                Cancel
+              </button>
             </form>
           )}
         </center>
 
-       
-        <center><h3>Daily Updates</h3></center>
+        <center>
+          <h3>Daily Updates</h3>
+        </center>
         <ul>
           {dailyUpdates.map((data, index) => (
             <li key={index}>
-              <p><strong>Date:</strong> {new Date(data.date).toLocaleDateString()}</p>
-              <p><strong>Moisture Content:</strong> {data.moistureContent}%</p>
-              <p><strong>Caffeine Content:</strong> {data.caffeineContent}%</p>
+              <p>
+                <strong>Date:</strong>{" "}
+                {new Date(data.date).toLocaleDateString()}
+              </p>
+              <p>
+                <strong>Moisture Content:</strong> {data.moistureContent}%
+              </p>
+              <p>
+                <strong>Caffeine Content:</strong> {data.caffeineContent}%
+              </p>
             </li>
           ))}
         </ul>

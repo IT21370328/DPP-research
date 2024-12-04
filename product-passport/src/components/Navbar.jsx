@@ -14,7 +14,7 @@ const Navbar = () => {
       <div className="navbar-links">
         <ul>
           <li>
-            <Link to="/" className="navbar-link">
+            <Link to="/admin" className="navbar-link">
               <FontAwesomeIcon icon={faHome} /> Home
             </Link>
           </li>

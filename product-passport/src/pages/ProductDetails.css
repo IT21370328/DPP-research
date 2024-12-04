@@ -1,113 +1,141 @@
-/* General styling for the page */
+/* General Styling */
 .product-details-page {
-    max-width: 900px;
-    margin: 50px auto;
-    padding: 30px;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+}
+
+/* Heading Styles */
+h1 {
+  font-size: 36px;
+  color: #4CAF50;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+h3 {
+  font-size: 24px;
+  color: #4CAF50;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #4CAF50;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+/* Product Details Section */
+.product-details {
+  color: #333333;
+  margin-bottom: 30px;
+}
+
+.product-details p {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.product-details p strong {
+  color: #4CAF50;
+}
+
+.product-details ul {
+  list-style: none;
+  padding: 0;
+}
+
+.product-details li {
+  padding: 10px 0;
+  border-bottom: 1px solid #dddddd;
+}
+
+/* Buttons */
+button {
+  padding: 12px 20px;
+  background-color: #4CAF50;
+  color: #ffffff;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  margin: 5px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+button[type="button"] {
+  background-color: #d9534f;
+}
+
+button[type="button"]:hover {
+  background-color: #c9302c;
+}
+
+/* Form Styling */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+form input {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  transition: 0.3s;
+}
+
+form input:focus {
+  border-color: #4CAF50;
+  outline: none;
+  background-color: #e6f7e6;
+}
+
+form button {
+  padding: 12px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+form button:hover {
+  background-color: #45a049;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .product-details-page {
+    padding: 20px;
+    width: 90%;
   }
-  
+
   h1 {
-    font-size: 36px;
-    color: #4CAF50;
-    text-align: center;
-    margin-bottom: 30px;
+    font-size: 28px;
   }
-  
-  /* Product Details Section */
-  .product-details {
-    font-family: 'Arial', sans-serif;
-    color: #333;
-    
+
+  h3 {
+    font-size: 20px;
   }
-  
-  .product-details p {
-    font-size: 18px;
-    line-height: 1.6;
-    margin-bottom: 12px;
-    
-  }
-  
-  .product-details p strong {
-    color: #4CAF50;
-  }
-  
-  .product-details ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
+
+  .product-details p,
   .product-details li {
-    padding: 10px 0;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .product-details h3 {
-    font-size: 24px;
-    color: #4CAF50;
-    margin-bottom: 15px;
-    border-bottom: 2px solid #4CAF50;
-    padding-bottom: 10px;
-  }
-  
-  /* Daily Data Form */
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 30px;
-  }
-  
-  form input {
-    padding: 12px;
     font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    transition: 0.3s;
   }
-  
-  form input:focus {
-    border-color: #4CAF50;
-    outline: none;
-    background-color: #e6f7e6;
-  }
-  
+
+  form input,
   form button {
-    padding: 12px;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 18px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
+    font-size: 14px;
   }
-  
-  form button:hover {
-    background-color: #45a049;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .product-details-page {
-      padding: 20px;
-      width: 90%;
-    }
-  
-    h1 {
-      font-size: 28px;
-    }
-  
-    .product-details p,
-    .product-details li {
-      font-size: 16px;
-    }
-  
-    form input,
-    form button {
-      font-size: 14px;
-    }
-  }
-  
+}

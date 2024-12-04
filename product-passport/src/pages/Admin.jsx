@@ -18,7 +18,7 @@ const AdminDashboard = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/admin");
+      const response = await axios.get("http://192.168.1.3:5000/api/admin");
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -36,7 +36,7 @@ const AdminDashboard = () => {
   const handleDelete = async (batchId) => {
     try {
       // Use the correct route `/api/admin/:batchId` without `/delete`
-      await axios.delete(`http://localhost:5000/api/admin/${batchId}`);
+      await axios.delete(`http://192.168.1.3:5000/api/admin/${batchId}`);
       fetchProducts(); // Refresh the list after delete
     } catch (error) {
       console.error("Error deleting product:", error);
@@ -66,7 +66,7 @@ const AdminDashboard = () => {
       <div className="product-grid">
         {products
           .filter((product) =>
-            product.flavor.toLowerCase().includes(search.toLowerCase())
+            product.batchId.toLowerCase().includes(search.toLowerCase())
           )
           .map((product) => (
             <div
